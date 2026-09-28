@@ -1,0 +1,40 @@
+Evidencia Semana 4 · lunes · 2026-09-28 11:17 · Genas Paoli
+
+### docker compose ps
+empleados-dbgate  dbgate/dbgate:7.3.1  Up 2 hours
+empleados-mongo  mongo:8.2  Up 2 hours (healthy)
+
+### Índices de la colección empleados
+_id_ {"_id":1} 
+email {"email":1} UNICO
+
+### Un documento tal como quedó en Mongo
+{
+  _id: ObjectId('6aba9bc6bc1e9002f0b36a79'),
+  nombre: 'Ana',
+  email: 'ana.lopez@empresa.com',
+  salario: Decimal128('35000'),
+  fechaIngreso: ISODate('2024-03-15T06:00:00.000Z'),
+  _class: 'com.academia.empleados.entity.Empleado'
+}
+
+### Documentos en la colección
+2
+
+### Qué cambió respecto a la versión MySQL (git diff v1-mysql HEAD --stat)
+ compose.yaml                                       | 42 +++++++----
+ evidencia/dia2/probar-crud.sh                      |  2 +-
+ evidencia/s4-dia1/crud.txt                         | 83 ++++++++++++++++++++++
+ evidencia/s4-dia1/evidencia.sh                     | 17 +++++
+ pom.xml                                            |  9 +--
+ .../academia/empleados/config/OpenApiConfig.java   |  2 +-
+ .../empleados/controller/EmpleadoController.java   |  6 +-
+ .../academia/empleados/dto/EmpleadoResponse.java   |  2 +-
+ .../com/academia/empleados/entity/Empleado.java    | 35 ++++-----
+ .../exception/EmpleadoNoEncontradoException.java   |  2 +-
+ .../empleados/repository/EmpleadoBusqueda.java     | 15 ++++
+ .../empleados/repository/EmpleadoBusquedaImpl.java | 55 ++++++++++++++
+ .../empleados/repository/EmpleadoRepository.java   | 36 +++-------
+ .../empleados/service/EmpleadoService.java         | 24 +++----
+ src/main/resources/application.properties          | 13 ++--
+ 15 files changed, 243 insertions(+), 100 deletions(-)
