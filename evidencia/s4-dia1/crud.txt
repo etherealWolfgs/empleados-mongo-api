@@ -1,0 +1,83 @@
+Evidencia CRUD · 2026-09-28 11:15 · Genas Paoli
+
+### 1. POST crea A → 201 + Location
+HTTP/1.1 201 
+Location: http://localhost:8080/api/empleados/6abaa0c0bc1e9002f0b36a7d
+Content-Type: application/json
+
+{"id":"6abaa0c0bc1e9002f0b36a7d","nombre":"PruebaA","apellidos":"Evidencia","email":"prueba.a.1790615744@empresa.com","puesto":"Tester","departamento":"Pruebas","salario":20000.00,"fechaIngreso":"2024-01-15","activo":true}
+
+
+### 2. POST crea B → 201
+HTTP/1.1 201 
+Location: http://localhost:8080/api/empleados/6abaa0c0bc1e9002f0b36a7e
+Content-Type: application/json
+
+{"id":"6abaa0c0bc1e9002f0b36a7e","nombre":"PruebaB","apellidos":"Evidencia","email":"prueba.b.1790615744@empresa.com","puesto":"Tester","departamento":"Pruebas","salario":21000.00,"fechaIngreso":"2024-01-15","activo":true}
+
+
+### 3. GET por id (A=6abaa0c0bc1e9002f0b36a7d) → 200
+HTTP/1.1 200 
+Content-Type: application/json
+
+{"id":"6abaa0c0bc1e9002f0b36a7d","nombre":"PruebaA","apellidos":"Evidencia","email":"prueba.a.1790615744@empresa.com","puesto":"Tester","departamento":"Pruebas","salario":20000.00,"fechaIngreso":"2024-01-15","activo":true}
+
+
+### 4. PUT B=6abaa0c0bc1e9002f0b36a7e cambia puesto y salario → 200
+HTTP/1.1 200 
+Content-Type: application/json
+
+{"id":"6abaa0c0bc1e9002f0b36a7e","nombre":"PruebaB","apellidos":"Evidencia","email":"prueba.b.1790615744@empresa.com","puesto":"Lider","departamento":"Pruebas","salario":25000.00,"fechaIngreso":"2024-01-15","activo":true}
+
+
+### 5. POST con el email de A → 409
+HTTP/1.1 409 
+Content-Type: application/problem+json
+
+{"detail":"Ya existe un empleado con el email prueba.a.1790615744@empresa.com","instance":"/api/empleados","status":409,"title":"Email duplicado"}
+
+
+### 6. POST con datos inválidos → 400
+HTTP/1.1 400 
+Content-Type: application/problem+json
+
+{"detail":"Hay 4 campo(s) con errores","instance":"/api/empleados","status":400,"title":"Datos inválidos","errores":{"email":"El email no tiene un formato válido","fechaIngreso":"La fecha de ingreso no puede ser futura","nombre":"El nombre es obligatorio","salario":"El salario debe ser mayor que cero"}}
+
+
+### 7. POST con fecha 15/03/2024 → 400 JSON ilegible
+HTTP/1.1 400 
+Content-Type: application/problem+json
+
+{"detail":"El cuerpo no es un JSON válido. Revisa comas y comillas, y que las fechas vayan como 2024-03-15","instance":"/api/empleados","status":400,"title":"JSON ilegible"}
+
+
+### 8. GET id inexistente 999999 → 404
+HTTP/1.1 404 
+Content-Type: application/problem+json
+
+{"detail":"No existe un empleado con id 999999","instance":"/api/empleados/999999","status":404,"title":"Empleado no encontrado"}
+
+
+### 9. DELETE A → 204
+HTTP/1.1 204 
+
+
+
+### 10. DELETE A otra vez → 404
+HTTP/1.1 404 
+Content-Type: application/problem+json
+
+{"detail":"No existe un empleado con id 6abaa0c0bc1e9002f0b36a7d","instance":"/api/empleados/6abaa0c0bc1e9002f0b36a7d","status":404,"title":"Empleado no encontrado"}
+
+
+### 11. DELETE B → 204
+HTTP/1.1 204 
+
+
+
+### 12. GET lista → 200
+HTTP/1.1 200 
+Content-Type: application/json
+
+{"contenido":[{"id":"6aba9bc6bc1e9002f0b36a79","nombre":"Ana","apellidos":"López Hernández","email":"ana.lopez@empresa.com","puesto":"Desarrolladora Backend","departamento":"Tecnología","salario":35000,"fechaIngreso":"2024-03-15","activo":true},{"id":"6aba9c22bc1e9002f0b36a7a","nombre":"Luis","apellidos":"Martínez Ruiz","email":"luis.martinez@empresa.com","puesto":"Contador Senior","departamento":"Finanzas","salario":32000.00,"fechaIngreso":"2023-08-01","activo":true}],"pagina":0,"tamano":10,"totalElementos":2,"totalPaginas":1,"primera":true,"ultima":true}
+

@@ -14,6 +14,6 @@ public class OpenApiConfig {
         return new OpenAPI().info(new Info()
                 .title("Empleados API")
                 .version("1.0")
-                .description("CRUD de empleados con Spring Boot, JPA y MySQL — Academia Java CDMX"));
+                .description("CRUD de empleados con Spring Boot y MongoDB — Academia Java CDMX"));
     }
 }

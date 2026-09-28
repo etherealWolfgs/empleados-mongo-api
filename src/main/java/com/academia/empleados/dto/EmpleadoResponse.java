@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public record EmpleadoResponse(
-        Long id,
+        String id,
         String nombre,
         String apellidos,
         String email,

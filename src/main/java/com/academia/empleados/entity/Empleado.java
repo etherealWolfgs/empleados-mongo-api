@@ -1,48 +1,41 @@
 package com.academia.empleados.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "empleados")
+// Un documento de la colección "empleados" (en MySQL era una fila de la tabla "empleados")
+@Document("empleados")
 public class Empleado {
 
+    // Mongo genera el _id: un ObjectId de 24 caracteres hexadecimales, no un número consecutivo
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(nullable = false, length = 60)
     private String nombre;
 
-    @Column(nullable = false, length = 80)
     private String apellidos;
 
-    @Column(nullable = false, unique = true, length = 120)
+    // Índice único: Mongo rechaza un segundo documento con el mismo email
+    @Indexed(unique = true)
     private String email;
 
-    @Column(nullable = false, length = 60)
     private String puesto;
 
-    @Column(nullable = false, length = 60)
     private String departamento;
 
-    @Column(nullable = false, precision = 10, scale = 2)
+    // Se guarda como Decimal128: decimal exacto, igual que el DECIMAL(10,2) de MySQL
     private BigDecimal salario;
 
-    @Column(name = "fecha_ingreso", nullable = false)
+    // Mongo no tiene "solo fecha": se guarda como fecha con hora (la medianoche de tu zona, en UTC)
     private LocalDate fechaIngreso;
 
-    @Column(nullable = false)
     private boolean activo = true;
 
-    // JPA necesita un constructor sin argumentos
+    // Spring Data necesita un constructor sin argumentos para leer los documentos
     protected Empleado() {
     }
 
@@ -57,7 +50,7 @@ public class Empleado {
         this.fechaIngreso = fechaIngreso;
     }
 
-    public Long getId() { return id; }
+    public String getId() { return id; }
 
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }

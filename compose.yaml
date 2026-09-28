@@ -1,23 +1,35 @@
 services:
-  mysql:
-    image: mysql:8.4
-    container_name: empleados-mysql
+  mongo:
+    image: mongo:8.2                  # fija: 8.3 y 8.0 NO arrancan con kernels de Linux 6.19 o más nuevos
+    container_name: empleados-mongo
+    restart: unless-stopped           # si WSL se apaga, al volver a abrir Ubuntu arranca solo
     environment:
-      MYSQL_ROOT_PASSWORD: root123
-      MYSQL_DATABASE: empleados_db
-      MYSQL_USER: academia
-      MYSQL_PASSWORD: academia123
+      MONGO_INITDB_ROOT_USERNAME: academia
+      MONGO_INITDB_ROOT_PASSWORD: academia123
     ports:
-      - "3306:3306"
+      - "27017:27017"
     volumes:
-      - mysql-data:/var/lib/mysql
+      - mongo-data:/data/db
     healthcheck:
-      # Por TCP (127.0.0.1) y con el usuario de la app: durante la inicialización la imagen levanta
-      # un MySQL temporal SIN red, así que «healthy» solo llega cuando el usuario academia ya existe.
-      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--protocol=tcp", "-uacademia", "-pacademia123"]
+      test: ["CMD", "mongosh", "--quiet", "-u", "academia", "-p", "academia123", "--eval", "db.adminCommand('ping').ok"]
       interval: 5s
-      timeout: 3s
-      retries: 30
+      timeout: 5s
+      retries: 20
+
+  dbgate:
+    image: dbgate/dbgate:7.3.1        # cliente gráfico web: http://localhost:3000
+    container_name: empleados-dbgate
+    restart: unless-stopped
+    environment:
+      CONNECTIONS: mongo
+      LABEL_mongo: MongoDB (empleados)
+      URL_mongo: mongodb://academia:academia123@mongo:27017/?authSource=admin
+      ENGINE_mongo: mongo@dbgate-plugin-mongo
+    ports:
+      - "127.0.0.1:3000:3000"         # solo en tu máquina: DbGate no pide contraseña
+    depends_on:
+      mongo:
+        condition: service_healthy
 
 volumes:
-  mysql-data:
+  mongo-data:

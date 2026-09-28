@@ -1,41 +1,23 @@
 package com.academia.empleados.repository;
 
 import com.academia.empleados.entity.Empleado;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-public interface EmpleadoRepository extends JpaRepository<Empleado, Long> {
+// MongoRepository en lugar de JpaRepository: mismos métodos heredados (findAll, findById, save, delete...)
+// El id ahora es String. Además "hereda" buscar(...) de EmpleadoBusqueda (lo implementa EmpleadoBusquedaImpl)
+public interface EmpleadoRepository extends MongoRepository<Empleado, String>, EmpleadoBusqueda {
 
+    // Consultas DERIVADAS: iguales que con MySQL; Spring Data arma la consulta de Mongo a partir del nombre
     boolean existsByEmail(String email);
 
-    boolean existsByEmailAndIdNot(String email, Long id);
+    boolean existsByEmailAndIdNot(String email, String id);
 
-    // Consultas DERIVADAS: Spring Data arma el SQL a partir del nombre del método
-    // ... WHERE LOWER(departamento) = LOWER(?) ORDER BY apellidos ASC
+    // { departamento: /^...$/i }, ordenado por apellidos
     List<Empleado> findByDepartamentoIgnoreCaseOrderByApellidosAsc(String departamento);
 
-    // ... WHERE salario BETWEEN ? AND ? ORDER BY salario DESC
+    // { salario: { $gte: minimo, $lte: maximo } }, del mayor al menor
     List<Empleado> findBySalarioBetweenOrderBySalarioDesc(BigDecimal minimo, BigDecimal maximo);
-
-    // Consulta JPQL escrita a mano: cada filtro es OPCIONAL (si llega null, no filtra)
-    @Query("""
-            SELECT e FROM Empleado e
-            WHERE (:departamento IS NULL OR LOWER(e.departamento) = LOWER(:departamento))
-              AND (:texto IS NULL OR LOWER(CONCAT(e.nombre, ' ', e.apellidos)) LIKE LOWER(CONCAT('%', :texto, '%')))
-              AND (:activo IS NULL OR e.activo = :activo)
-              AND (:salarioMinimo IS NULL OR e.salario >= :salarioMinimo)
-              AND (:salarioMaximo IS NULL OR e.salario <= :salarioMaximo)
-            """)
-    Page<Empleado> buscar(@Param("departamento") String departamento,
-                          @Param("texto") String texto,
-                          @Param("activo") Boolean activo,
-                          @Param("salarioMinimo") BigDecimal salarioMinimo,
-                          @Param("salarioMaximo") BigDecimal salarioMaximo,
-                          Pageable pageable);
 }

@@ -9,7 +9,7 @@ A="prueba.a.$SUFIJO@empresa.com"
 B="prueba.b.$SUFIJO@empresa.com"
 cuerpo() { echo "{\"nombre\":\"$1\",\"apellidos\":\"Evidencia\",\"email\":\"$2\",\"puesto\":\"$3\",\"departamento\":\"Pruebas\",\"salario\":$4,\"fechaIngreso\":\"2024-01-15\"}"; }
 paso() { echo; echo "### $1"; shift; curl -s -i "$@" | tr -d '\r' | tee /tmp/ultima-respuesta.txt | grep -viE '^(date|keep-alive|connection|transfer-encoding|vary|content-length):'; echo; }
-id_creado() { grep -i '^location:' /tmp/ultima-respuesta.txt | grep -o '[0-9]*$'; }   # el id sale de la cabecera Location
+id_creado() { grep -i '^location:' /tmp/ultima-respuesta.txt | grep -o '[^/]*$'; }   # el id sale de la cabecera Location
 
 echo "Evidencia CRUD · $(date '+%Y-%m-%d %H:%M') · $(git config user.name)"
 paso "1. POST crea A → 201 + Location" -X POST $API -H "$H" -d "$(cuerpo PruebaA $A Tester 20000.00)"
