@@ -1,0 +1,32 @@
+Evidencia Mongo · 2026-09-29 17:20 · Genas Paoli
+
+### 1. Por ciudad, sin acento: queretaro encuentra Querétaro → 200
+GET /buscar?ciudad=queretaro&sort=apellidos,asc
+HTTP 200
+   totalElementos=6
+   Pablo Estrada Molina | Querétaro | Excel, Inventarios
+   Luis Jiménez Salas | Querétaro | Inglés, SAP, Análisis financiero
+   Gabriel Luna Espinoza | Querétaro | Negociación, Inglés
+   Ana López Hernández | Querétaro | Java, MongoDB
+   Diego Morales Vega | Querétaro | SQL, MongoDB, Java
+   Emilio Ortiz Guzmán | Querétaro | Comunicación, CRM
+
+### 2. Por habilidad: java (un elemento de la lista) → 200
+GET /buscar?habilidad=java&sort=apellidos,asc
+HTTP 200
+   totalElementos=4
+   Andrés Flores Méndez | Mérida | MongoDB, Java
+   Ana López Hernández | Querétaro | Java, MongoDB
+   Diego Morales Vega | Querétaro | SQL, MongoDB, Java
+   Mariana Sánchez Ortega | Ciudad de México | Java, Docker, Git
+
+### 3. Combinado: Tecnología en Monterrey → 200
+GET /buscar?departamento=tecnologia&ciudad=monterrey
+HTTP 200
+   totalElementos=1
+   Sofía Hernández Cruz | Monterrey | Docker, Git
+
+### 4. Una habilidad que nadie tiene → 200 vacío
+GET /buscar?habilidad=cobol
+HTTP 200
+   totalElementos=0

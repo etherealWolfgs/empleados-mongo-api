@@ -6,6 +6,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 // Un documento de la colección "empleados" (en MySQL era una fila de la tabla "empleados")
 @Document("empleados")
@@ -34,6 +36,12 @@ public class Empleado {
     private LocalDate fechaIngreso;
 
     private boolean activo = true;
+
+    // Documento embebido: { calle, ciudad, estado, codigoPostal } dentro del empleado (puede faltar)
+    private Direccion direccion;
+
+    // Una lista dentro del documento: ["Java", "Docker"]. En MySQL sería otra tabla y un JOIN
+    private List<String> habilidades = new ArrayList<>();
 
     // Spring Data necesita un constructor sin argumentos para leer los documentos
     protected Empleado() {
@@ -75,4 +83,10 @@ public class Empleado {
 
     public boolean isActivo() { return activo; }
     public void setActivo(boolean activo) { this.activo = activo; }
+
+    public Direccion getDireccion() { return direccion; }
+    public void setDireccion(Direccion direccion) { this.direccion = direccion; }
+
+    public List<String> getHabilidades() { return habilidades; }
+    public void setHabilidades(List<String> habilidades) { this.habilidades = habilidades; }
 }

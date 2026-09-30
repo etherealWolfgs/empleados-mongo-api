@@ -2,6 +2,7 @@ package com.academia.empleados.service;
 
 import com.academia.empleados.dto.EmpleadoRequest;
 import com.academia.empleados.dto.EmpleadoResponse;
+import com.academia.empleados.dto.EstadisticaDepartamento;
 import com.academia.empleados.dto.PaginaResponse;
 import com.academia.empleados.entity.Empleado;
 import com.academia.empleados.exception.EmailDuplicadoException;
@@ -12,6 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
 
 // Sin @Transactional: MongoDB en un solo servidor no tiene transacciones de varios documentos,
@@ -28,15 +31,16 @@ public class EmpleadoService {
 
     // UNA página: tamaño y orden los decide el cliente
     public PaginaResponse<EmpleadoResponse> listar(Pageable pageable) {
+        validarOrden(pageable);   // con MySQL, findAll ya lo rechazaba; Mongo ordena por un campo inexistente sin quejarse
         return PaginaResponse.desde(repository.findAll(pageable), EmpleadoResponse::desde);
     }
 
     public PaginaResponse<EmpleadoResponse> buscar(String departamento, String texto, Boolean activo,
                                                    BigDecimal salarioMinimo, BigDecimal salarioMaximo,
-                                                   Pageable pageable) {
+                                                   String ciudad, String habilidad, Pageable pageable) {
         validarOrden(pageable);
         return PaginaResponse.desde(
-                repository.buscar(departamento, texto, activo, salarioMinimo, salarioMaximo, pageable),
+                repository.buscar(departamento, texto, activo, salarioMinimo, salarioMaximo, ciudad, habilidad, pageable),
                 EmpleadoResponse::desde);
     }
 
@@ -52,6 +56,14 @@ public class EmpleadoService {
                 .toList();
     }
 
+    // El promedio sale con muchos decimales (25333.333333...): se redondea a centavos
+    public List<EstadisticaDepartamento> estadisticasPorDepartamento() {
+        return repository.estadisticasPorDepartamento().stream()
+                .map(e -> new EstadisticaDepartamento(e.departamento(), e.empleados(), e.activos(),
+                        e.salarioPromedio().setScale(2, RoundingMode.HALF_UP), e.salarioMinimo(), e.salarioMaximo()))
+                .toList();
+    }
+
     public EmpleadoResponse buscarPorId(String id) {
         return EmpleadoResponse.desde(obtener(id));
     }
@@ -63,6 +75,7 @@ public class EmpleadoService {
         Empleado empleado = new Empleado(datos.nombre(), datos.apellidos(), datos.email(), datos.puesto(),
                 datos.departamento(), datos.salario(), datos.fechaIngreso());
         empleado.setActivo(datos.activo() == null || datos.activo());
+        copiarDireccionYHabilidades(datos, empleado);
         return EmpleadoResponse.desde(repository.save(empleado));
     }
 
@@ -79,6 +92,7 @@ public class EmpleadoService {
         empleado.setSalario(datos.salario());
         empleado.setFechaIngreso(datos.fechaIngreso());
         empleado.setActivo(datos.activo() == null || datos.activo());
+        copiarDireccionYHabilidades(datos, empleado);
         return EmpleadoResponse.desde(repository.save(empleado));
     }
 
@@ -89,6 +103,12 @@ public class EmpleadoService {
     // sort=campoQueNoExiste: PropertyPath.from lo detecta y lanza PropertyReferenceException → el manejador responde 400.
     private void validarOrden(Pageable pageable) {
         pageable.getSort().forEach(orden -> PropertyPath.from(orden.getProperty(), Empleado.class));
+    }
+
+    // PUT reemplaza el empleado completo: si no llega dirección o habilidades, se quedan vacías
+    private void copiarDireccionYHabilidades(EmpleadoRequest datos, Empleado empleado) {
+        empleado.setDireccion(datos.direccion() == null ? null : datos.direccion().aEntidad());
+        empleado.setHabilidades(datos.habilidades() == null ? new ArrayList<>() : new ArrayList<>(datos.habilidades()));
     }
 
     // Busca el empleado o lanza la excepción que el manejador convierte en 404

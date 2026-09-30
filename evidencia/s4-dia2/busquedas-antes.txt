@@ -1,0 +1,167 @@
+Evidencia búsquedas y paginación · 2026-09-29 16:32 · Genas Paoli
+
+### 1. Primera página por defecto (10, por id) → 200
+GET 
+HTTP 200
+   pagina=0 tamano=10 totalElementos=32 totalPaginas=4 primera=True ultima=False
+   6aba9bc6bc1e9002f0b36a79 Ana López Hernández | Tecnología | 35000
+   6aba9c22bc1e9002f0b36a7a Luis Martínez Ruiz | Finanzas | 32000.0
+   6abc19295d9181b93870494c Mariana Sánchez Ortega | Tecnología | 42000.0
+   6abc19295d9181b93870494d Jorge Ramírez Luna | Tecnología | 38500.0
+   6abc19295d9181b93870494e Sofía Hernández Cruz | Tecnología | 65000.0
+   6abc19295d9181b93870494f Diego Morales Vega | Tecnología | 29000.0
+   6abc19295d9181b938704950 Valeria Torres Ríos | Tecnología | 51000.0
+   6abc19295d9181b938704951 Andrés Flores Méndez | Tecnología | 18500.0 | INACTIVO
+   6abc19295d9181b938704952 Camila Gómez Reyes | Finanzas | 36000.0
+   6abc19295d9181b938704953 Ricardo Díaz Navarro | Finanzas | 33000.0
+
+### 2. Los 5 salarios más altos → 200
+GET ?page=0&size=5&sort=salario,desc
+HTTP 200
+   pagina=0 tamano=5 totalElementos=32 totalPaginas=7 primera=True ultima=False
+   6abc19295d9181b938704967 Gabriel Luna Espinoza | Dirección | 95000.0
+   6abc19295d9181b938704954 Fernanda Castillo Paredes | Finanzas | 72000.0
+   6abc19295d9181b93870494e Sofía Hernández Cruz | Tecnología | 65000.0
+   6abc19295d9181b938704965 Sebastián Peña Carrillo | Operaciones | 63000.0
+   6abc19295d9181b93870495d Tomás Medina Rojas | Ventas | 61000.0
+
+### 3. La siguiente página de 5 → 200
+GET ?page=1&size=5&sort=salario,desc
+HTTP 200
+   pagina=1 tamano=5 totalElementos=32 totalPaginas=7 primera=False ultima=False
+   6abc19295d9181b938704958 Daniela Mendoza Soto | Recursos Humanos | 58000.0
+   6abc19295d9181b938704969 Arturo Chávez Miranda | Dirección | 55000.0
+   6abc19295d9181b938704950 Valeria Torres Ríos | Tecnología | 51000.0
+   6abc19295d9181b93870495e Natalia Cabrera León | Ventas | 47000.0
+   6abc19295d9181b938704956 Paola Ruiz Delgado | Finanzas | 45000.0 | INACTIVO
+
+### 4. size=1000 se recorta a 50 → 200
+GET ?size=1000
+HTTP 200
+   pagina=0 tamano=50 totalElementos=32 totalPaginas=1 primera=True ultima=True
+   6aba9bc6bc1e9002f0b36a79 Ana López Hernández | Tecnología | 35000
+   6aba9c22bc1e9002f0b36a7a Luis Martínez Ruiz | Finanzas | 32000.0
+   6abc19295d9181b93870494c Mariana Sánchez Ortega | Tecnología | 42000.0
+   6abc19295d9181b93870494d Jorge Ramírez Luna | Tecnología | 38500.0
+   6abc19295d9181b93870494e Sofía Hernández Cruz | Tecnología | 65000.0
+   6abc19295d9181b93870494f Diego Morales Vega | Tecnología | 29000.0
+   6abc19295d9181b938704950 Valeria Torres Ríos | Tecnología | 51000.0
+   6abc19295d9181b938704951 Andrés Flores Méndez | Tecnología | 18500.0 | INACTIVO
+   6abc19295d9181b938704952 Camila Gómez Reyes | Finanzas | 36000.0
+   6abc19295d9181b938704953 Ricardo Díaz Navarro | Finanzas | 33000.0
+   6abc19295d9181b938704954 Fernanda Castillo Paredes | Finanzas | 72000.0
+   6abc19295d9181b938704955 Luis Jiménez Salas | Finanzas | 16000.0
+   6abc19295d9181b938704956 Paola Ruiz Delgado | Finanzas | 45000.0 | INACTIVO
+   6abc19295d9181b938704957 Héctor Vargas Peña | Recursos Humanos | 24000.0
+   6abc19295d9181b938704958 Daniela Mendoza Soto | Recursos Humanos | 58000.0
+   6abc19295d9181b938704959 Iván Aguilar Ponce | Recursos Humanos | 27500.0
+   6abc19295d9181b93870495a Lucía Herrera Campos | Recursos Humanos | 23000.0 | INACTIVO
+   6abc19295d9181b93870495b Emilio Ortiz Guzmán | Ventas | 21000.0
+   6abc19295d9181b93870495c Regina Silva Fuentes | Ventas | 21500.0
+   6abc19295d9181b93870495d Tomás Medina Rojas | Ventas | 61000.0
+   6abc19295d9181b93870495e Natalia Cabrera León | Ventas | 47000.0
+   6abc19295d9181b93870495f Óscar Rosales Ibarra | Ventas | 19500.0 | INACTIVO
+   6abc19295d9181b938704960 Andrea Núñez Figueroa | Ventas | 30500.0
+   6abc19295d9181b938704961 Pablo Estrada Molina | Operaciones | 34000.0
+   6abc19295d9181b938704962 Ximena Domínguez Lara | Operaciones | 39000.0
+   6abc19295d9181b938704963 Rodrigo Vázquez Acosta | Operaciones | 15500.0
+   6abc19295d9181b938704964 Alejandra Ramos Serrano | Operaciones | 28000.0
+   6abc19295d9181b938704965 Sebastián Peña Carrillo | Operaciones | 63000.0
+   6abc19295d9181b938704966 Renata Guerrero Bravo | Operaciones | 15800.0 | INACTIVO
+   6abc19295d9181b938704967 Gabriel Luna Espinoza | Dirección | 95000.0
+   6abc19295d9181b938704968 Mónica Rivas Cortés | Dirección | 26000.0
+   6abc19295d9181b938704969 Arturo Chávez Miranda | Dirección | 55000.0
+
+### 5. Buscar departamento=ventas (sin importar mayúsculas) → 200
+GET /buscar?departamento=ventas
+HTTP 200
+   pagina=0 tamano=10 totalElementos=6 totalPaginas=1 primera=True ultima=True
+   6abc19295d9181b93870495b Emilio Ortiz Guzmán | Ventas | 21000.0
+   6abc19295d9181b93870495c Regina Silva Fuentes | Ventas | 21500.0
+   6abc19295d9181b93870495d Tomás Medina Rojas | Ventas | 61000.0
+   6abc19295d9181b93870495e Natalia Cabrera León | Ventas | 47000.0
+   6abc19295d9181b93870495f Óscar Rosales Ibarra | Ventas | 19500.0 | INACTIVO
+   6abc19295d9181b938704960 Andrea Núñez Figueroa | Ventas | 30500.0
+
+### 6. Buscar texto=oscar (sin acento, encuentra Óscar) → 200
+GET /buscar?texto=oscar
+HTTP 200
+   pagina=0 tamano=10 totalElementos=1 totalPaginas=1 primera=True ultima=True
+   6abc19295d9181b93870495f Óscar Rosales Ibarra | Ventas | 19500.0 | INACTIVO
+
+### 7. Buscar inactivos → 200
+GET /buscar?activo=false
+HTTP 200
+   pagina=0 tamano=10 totalElementos=5 totalPaginas=1 primera=True ultima=True
+   6abc19295d9181b938704951 Andrés Flores Méndez | Tecnología | 18500.0 | INACTIVO
+   6abc19295d9181b938704956 Paola Ruiz Delgado | Finanzas | 45000.0 | INACTIVO
+   6abc19295d9181b93870495a Lucía Herrera Campos | Recursos Humanos | 23000.0 | INACTIVO
+   6abc19295d9181b93870495f Óscar Rosales Ibarra | Ventas | 19500.0 | INACTIVO
+   6abc19295d9181b938704966 Renata Guerrero Bravo | Operaciones | 15800.0 | INACTIVO
+
+### 8. Buscar salario entre 30000 y 50000, del mayor al menor → 200
+GET /buscar?salarioMinimo=30000&salarioMaximo=50000&sort=salario,desc
+HTTP 200
+   pagina=0 tamano=10 totalElementos=11 totalPaginas=2 primera=True ultima=False
+   6abc19295d9181b93870495e Natalia Cabrera León | Ventas | 47000.0
+   6abc19295d9181b938704956 Paola Ruiz Delgado | Finanzas | 45000.0 | INACTIVO
+   6abc19295d9181b93870494c Mariana Sánchez Ortega | Tecnología | 42000.0
+   6abc19295d9181b938704962 Ximena Domínguez Lara | Operaciones | 39000.0
+   6abc19295d9181b93870494d Jorge Ramírez Luna | Tecnología | 38500.0
+   6abc19295d9181b938704952 Camila Gómez Reyes | Finanzas | 36000.0
+   6aba9bc6bc1e9002f0b36a79 Ana López Hernández | Tecnología | 35000
+   6abc19295d9181b938704961 Pablo Estrada Molina | Operaciones | 34000.0
+   6abc19295d9181b938704953 Ricardo Díaz Navarro | Finanzas | 33000.0
+   6aba9c22bc1e9002f0b36a7a Luis Martínez Ruiz | Finanzas | 32000.0
+
+### 9. Filtros combinados: tecnologia + activos + desde 30000 → 200
+GET /buscar?departamento=tecnologia&activo=true&salarioMinimo=30000
+HTTP 200
+   pagina=0 tamano=10 totalElementos=5 totalPaginas=1 primera=True ultima=True
+   6aba9bc6bc1e9002f0b36a79 Ana López Hernández | Tecnología | 35000
+   6abc19295d9181b93870494c Mariana Sánchez Ortega | Tecnología | 42000.0
+   6abc19295d9181b93870494d Jorge Ramírez Luna | Tecnología | 38500.0
+   6abc19295d9181b93870494e Sofía Hernández Cruz | Tecnología | 65000.0
+   6abc19295d9181b938704950 Valeria Torres Ríos | Tecnología | 51000.0
+
+### 10. Consulta derivada: departamento Finanzas por apellidos → 200
+GET /departamento/Finanzas
+HTTP 200
+   6 empleados
+   6abc19295d9181b938704954 Fernanda Castillo Paredes | Finanzas | 72000.0
+   6abc19295d9181b938704953 Ricardo Díaz Navarro | Finanzas | 33000.0
+   6abc19295d9181b938704952 Camila Gómez Reyes | Finanzas | 36000.0
+   6abc19295d9181b938704955 Luis Jiménez Salas | Finanzas | 16000.0
+   6aba9c22bc1e9002f0b36a7a Luis Martínez Ruiz | Finanzas | 32000.0
+   6abc19295d9181b938704956 Paola Ruiz Delgado | Finanzas | 45000.0 | INACTIVO
+
+### 11. Consulta derivada: salarios entre 40000 y 60000 → 200
+GET /salarios?minimo=40000&maximo=60000
+HTTP 200
+   6 empleados
+   6abc19295d9181b938704958 Daniela Mendoza Soto | Recursos Humanos | 58000.0
+   6abc19295d9181b938704969 Arturo Chávez Miranda | Dirección | 55000.0
+   6abc19295d9181b938704950 Valeria Torres Ríos | Tecnología | 51000.0
+   6abc19295d9181b93870495e Natalia Cabrera León | Ventas | 47000.0
+   6abc19295d9181b938704956 Paola Ruiz Delgado | Finanzas | 45000.0 | INACTIVO
+   6abc19295d9181b93870494c Mariana Sánchez Ortega | Tecnología | 42000.0
+
+### 12. Ordenar por un campo que no existe → 400
+GET ?sort=sueldo
+HTTP 400
+   {"detail": "No se puede ordenar por 'sueldo': ese campo no existe", "instance": "/api/empleados", "status": 400, "title": "Orden inválido"}
+
+### 13. Lo mismo en /buscar → 400
+GET /buscar?sort=sueldo
+HTTP 400
+   {"detail": "No se puede ordenar por 'sueldo': ese campo no existe", "instance": "/api/empleados/buscar", "status": 400, "title": "Orden inválido"}
+
+### 14. Falta un parámetro obligatorio → 400
+GET /salarios?minimo=40000
+HTTP 400
+   {"detail": "Falta el parámetro obligatorio 'maximo'", "instance": "/api/empleados/salarios", "status": 400, "title": "Parámetro faltante"}
+
+### 15. Un parámetro con tipo equivocado → 400
+GET /buscar?activo=quizas
+HTTP 400
+   {"detail": "El valor 'quizas' no sirve para el parámetro 'activo'", "instance": "/api/empleados/buscar", "status": 400, "title": "Parámetro inválido"}

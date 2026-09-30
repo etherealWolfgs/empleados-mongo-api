@@ -1,0 +1,19 @@
+paso  MySQL      Mongo      resultado
+  1   200 ·  9   200 ·  8   igual (*)  Primera página por defecto (10, por id) → 200
+  2   200 ·  5   200 ·  5   igual      Los 5 salarios más altos → 200
+  3   200 ·  5   200 ·  5   igual      La siguiente página de 5 → 200
+  4   200 · 30   200 · 30   igual      size=1000 se recorta a 50 → 200
+  5   200 ·  6   200 ·  6   igual      Buscar departamento=ventas (sin importar mayúsculas) → 200
+  6   200 ·  1   200 ·  1   igual      Buscar texto=oscar (sin acento, encuentra Óscar) → 200
+  7   200 ·  5   200 ·  5   igual      Buscar inactivos → 200
+  8   200 ·  9   200 ·  8   igual (*)  Buscar salario entre 30000 y 50000, del mayor al menor → 200
+  9   200 ·  4   200 ·  4   igual      Filtros combinados: tecnologia + activos + desde 30000 → 200
+ 10   200 ·  5   200 ·  5   igual      Consulta derivada: departamento Finanzas por apellidos → 200
+ 11   200 ·  6   200 ·  6   igual      Consulta derivada: salarios entre 40000 y 60000 → 200
+ 12   400 ·  0   400 ·  0   igual      Ordenar por un campo que no existe → 400
+ 13   400 ·  0   400 ·  0   igual      Lo mismo en /buscar → 400
+ 14   400 ·  0   400 ·  0   igual      Falta un parámetro obligatorio → 400
+ 15   400 ·  0   400 ·  0   igual      Un parámetro con tipo equivocado → 400
+
+15 de 15 pasos iguales, contando solo a los 30 de la semilla.
+(*) Igual: la diferencia son empleados que creaste a mano (en MySQL o en Mongo) y que no están en la semilla.

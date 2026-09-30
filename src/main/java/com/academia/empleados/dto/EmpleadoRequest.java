@@ -1,6 +1,7 @@
 package com.academia.empleados.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -11,6 +12,7 @@ import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Schema(description = "Datos para crear o modificar un empleado")
 public record EmpleadoRequest(
@@ -53,6 +55,15 @@ public record EmpleadoRequest(
         LocalDate fechaIngreso,
 
         @Schema(example = "true", description = "Si no se envía, se toma como true")
-        Boolean activo
+        Boolean activo,
+
+        // Opcional. @Valid: también se validan los campos de la dirección
+        @Valid
+        DireccionDto direccion,
+
+        // Opcional. Cada habilidad: no vacía y de máximo 40 caracteres
+        @Schema(example = "[\"Java\", \"MongoDB\"]")
+        @Size(max = 10, message = "Máximo 10 habilidades")
+        List<@NotBlank(message = "Una habilidad no puede estar vacía") @Size(max = 40, message = "Cada habilidad admite máximo 40 caracteres") String> habilidades
 ) {
 }
